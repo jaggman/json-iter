@@ -517,15 +517,8 @@ func (decoder *generalStructDecoder) Decode(ptr unsafe.Pointer, iter *Iterator) 
 }
 
 func (decoder *generalStructDecoder) decodeOneField(ptr unsafe.Pointer, iter *Iterator) {
-	var field string
-	var fieldDecoder *structFieldDecoder
-	if iter.cfg.objectFieldMustBeSimpleString {
-		fieldBytes := iter.ReadStringAsSlice()
-		field = *(*string)(unsafe.Pointer(&fieldBytes))
-	} else {
-		field = string(iter.ReadStringAsSlice())
-	}
-	fieldDecoder = decoder.fields[field]
+	field := string(iter.ReadStringAsSlice())
+	fieldDecoder := decoder.fields[field]
 	if fieldDecoder == nil && !iter.cfg.caseSensitive {
 		fieldDecoder = decoder.fields[strings.ToLower(field)]
 	}
